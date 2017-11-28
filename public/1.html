@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button>aaa</button>
+
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="jweixin-1.0.0.js"></script>
+<script>
+    $.ajax({
+        url: 'http://wx.gvrcraft.com/getsignature' // 此处url请求地址需要替换成你自己实际项目中服务器数字签名服务地址
+        ,
+        type: 'post',
+        data: {
+            url: location.href.split('#')[0] // 将当前URL地址上传至服务器用于产生数字签名
+        }
+    }).done(function(r) {
+        // 返回了数字签名对象
+        console.log(r);
+        console.log(r.appid);
+        console.log(r.timestamp);
+        console.log(r.nonceStr);
+        console.log(r.signature);
+
+        // 开始配置微信JS-SDK
+        wx.config({
+            debug: true,
+            appId: r.appId,
+            timestamp: r.timestamp,
+            nonceStr: r.nonceStr,
+            signature: r.signature,
+            jsApiList: [
+                'checkJsApi',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'hideMenuItems',
+                'chooseImage'
+            ]
+        });
+        wx.error(function(res){
+alert(1111111)
+            // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+
+        });
+        // 调用微信API
+        wx.ready(function() {
+            alert(22222)
+            var sdata = {
+                title: '那年|测试微信分享及相关API',
+                desc: '那年|测试微信分享及相关API',
+                link: 'http://wx.gvrcraft.com/1.html',
+                imgUrl: 'http://wx.gvrcraft.com/1.jpeg',
+                success: function() {
+                    alert('用户确认分享后执行的回调函数');
+                },
+                cancel: function() {
+                    alert('用户取消分享后执行的回调函数');
+                }
+            };
+            wx.onMenuShareTimeline(sdata);
+            wx.onMenuShareAppMessage(sdata);
+            // 添加图片
+            $('#addPic').on('click', function() {
+                wx.chooseImage({
+                    success: function(res) {
+                        var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                        // var imgs = localIds.split(',');
+                        localIds.forEach(function(v, i) {
+                            alert(v);
+                            $('#picList').append('<li><img src="' + v + '" alt="" width="50"></li>');
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>

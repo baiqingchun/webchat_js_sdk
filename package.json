@@ -1,0 +1,19 @@
+{
+    "name": "wx",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "author": "",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nohup nodemon -I index.js &"
+    },
+    "dependencies": {
+        "art-template": "^3.0.3",
+        "async": "^0.9.0",
+        "bufferhelper": "^0.2.0",
+        "express": "3.0.6",
+        "iconv-lite": "^0.4.8",
+        "request": "^2.55.0"
+    }
+}
